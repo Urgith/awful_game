@@ -4,6 +4,7 @@ import random   # importujemy moduł, który inicjalizuje początkowe współrz�
 import sys		# importujemy moduł, który znormalizuje wyłączenie gry
 from pygame.locals import* # importujemy 'poddział' modułu pygame, aby oszczedzić pisania
 
+
 class Statek:
   '''klasa,której obiektami są: statek, którym kierujemy, pociski, którymi strzelamy oraz przeciwnicy, z którymi walczymy, niektóre funkcje tej klasy są bardzo uniwersalne'''
   def __init__(self,name, a=0, b=0):
