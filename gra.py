@@ -1,116 +1,153 @@
-import pygame	# importujemy moduł, który w znacznym stopniu upraszcza tworzenie gier
-import time		# importujemy moduł, który wykorzystamy, aby usprawnić płynność gry
-import random   # importujemy moduł, który inicjalizuje początkowe współrzędne monet oraz przeciwników, a także odpowiada za ruch przeciwników
-import sys		# importujemy moduł, który znormalizuje wyłączenie gry
-from pygame.locals import* # importujemy 'poddział' modułu pygame, aby oszczedzić pisania
+import pygame
+import random
+import time
+import sys
+
+from pygame.locals import*  # aby zaoszczędzić sobie pisania
 
 
 class Statek:
-  '''klasa,której obiektami są: statek, którym kierujemy, pociski, którymi strzelamy oraz przeciwnicy, z którymi walczymy, niektóre funkcje tej klasy są bardzo uniwersalne'''
-  def __init__(self,name, a=0, b=0):
-    '''funkcja tworząca objekt(statek) mający swoją nazwę oraz współrzędne x i y'''
-    self.x=a
-    self.y=b
-    self.n=name
-  def get_name(self):
-    '''funkacja zwracająca nazwę statku'''
-    return self.n
-  def move(self,x,y):
-    '''funkcja odpowiedzialna za przesuwanie statku na ekranie o współrzędne x i y'''
-    self.x = self.x+x
-    self.y = self.y+y
-  def get_position(self):
-    '''funkcja, która wypisuje w konsoli pozycję statku'''
-    print('(',self.x,',',self.y,')')
-  def zwroc_pozycje(self):
-    '''funkcja, która zwraca pozycję statku'''
-    return (self.x, self.y)
-  def get_distance(self,other):
-    '''funkcja zwracająca odległość między dwoma statkami'''
-    return abs(((self.x-other.x)**2+(self.y-other.y)**2))**(1/2)
-  def get_stats(self,siła,zasięg):
-    '''funkcja nadająca statystyki siły oraz zasięgu(rozmiaru) statkom'''
-    self.s=siła
-    self.z=zasięg
-  def get_buff(self,s,z):
-    '''funkcja zmieniająca statystyki statku'''
-    self.s += s
-    self.z += z
-  def get_strenght(self):
-    '''funkcja zwracająca siłę danego statku'''
-    return self.s
-  def get_range(self):
-    '''funkcja zwracająca zasięg statku'''
-    return self.z
-  def pistolet(self,m,n,mn,nm):
-    '''funkcja, która wystrzeliwuje pocisk ze statku(rysuje go)'''
-    pygame.draw.rect(plansza,(0,255,255),(Statek.zwroc_pozycje(player)[0]+Statek.get_range(player)+m,Statek.zwroc_pozycje(player)[1]-4+n,mn,nm))
-    Statek.move(player,a,b)
-    pygame.draw.rect(plansza,(0,0,0),(Statek.zwroc_pozycje(player)[0]+Statek.get_range(player)+m,Statek.zwroc_pozycje(player)[1]-4+n,mn,nm))
-  def strzal(self):
-    '''funkcja zwracająca pozycję pocisku'''
-    return Statek('Pocisk',Statek.zwroc_pozycje(player)[0],Statek.zwroc_pozycje(player)[1])
-  def atak(self,other):
-    '''funkcja realizująca walkę pomiędzy statkami'''
-    def get_distance(self,other):
-      return abs(((self.x-other.x)**2+(self.y-other.y)**2))**(1/2)
-    def __del__(self):
-      '''funkcja informująca nas o usunięciu statku'''
-      print('Statek',"'",self.n,"'",'zostal zniszczony')
-      pygame.draw.circle(plansza,(0,255,255),Statek.zwroc_pozycje(self),int(Statek.get_range(self)))
-    if self.z+other.z >= get_distance(self,other) and self.s>0 and other.s>0:
-      while self.s>0 and other.s>0:
-        if self.z < other.z:
-          self.s -= other.s/5
-          if self.s>0:
-            other.s -= self.s/5
-        else:
-          other.s -= self.s/5
-          if other.s>0:
-            self.s -= other.s/5
-      if self.s<0:
-        __del__(self)
-        porazka()
-      else:
-        __del__(other)
+    '''Klasa, której obiektami są:
+        statek: którym kierujemy,
+        pociski: którymi strzelamy,
+        przeciwnicy: z którymi walczymy,
+        niektóre funkcje tej klasy są bardzo uniwersalne
+    '''
+    def __init__(self, name, x=0, y=0):
+        '''funkcja tworząca objekt(statek) mający swoją nazwę oraz współrzędne x i y'''
+        self.n = name
+        self.x = x
+        self.y = y
+
+    def get_name(self):
+        '''funkacja zwracająca nazwę statku'''
+        return self.n
+
+    def move(self, x, y):
+        '''funkcja odpowiedzialna za przesuwanie statku na ekranie o współrzędne x i y'''
+        self.x += x
+        self.y += y
+
+    def get_position(self):
+        '''funkcja, która wypisuje w konsoli pozycję statku'''
+        print('(', self.x, ',', self.y, ')')
+
+    def zwroc_pozycje(self):
+        '''funkcja, która zwraca pozycję statku'''
+        return (self.x, self.y)
+
+    def get_distance(self, other):
+        '''funkcja zwracająca odległość między dwoma statkami'''
+        return abs(((self.x - other.x)**2 + (self.y - other.y)**2)) ** 0.5
+
+    def get_stats(self, siła, zasięg):
+        '''funkcja nadająca statystyki siły oraz zasięgu(rozmiaru) statkom'''
+        self.z = zasięg
+        self.s = siła
+
+    def get_buff(self, s, z):
+        '''funkcja zmieniająca statystyki statku'''
+        self.s += s
+        self.z += z
+
+    def get_strenght(self):
+        '''funkcja zwracająca siłę danego statku'''
+        return self.s
+
+    def get_range(self):
+        '''funkcja zwracająca zasięg statku'''
+        return self.z
+
+    def pistolet(self, m, n, mn, nm):
+        '''funkcja, która wystrzeliwuje pocisk ze statku(rysuje go)'''
+        pygame.draw.rect(plansza, (0,255,255), (Statek.zwroc_pozycje(player)[0] + Statek.get_range(player) + m,Statek.zwroc_pozycje(player)[1] - 4 + n, mn, nm))
+        Statek.move(player, a, b)
+        pygame.draw.rect(plansza, (0,0,0), (Statek.zwroc_pozycje(player)[0] + Statek.get_range(player) + m, Statek.zwroc_pozycje(player)[1] - 4 + n, mn, nm))
+
+    def strzal(self):
+        '''funkcja zwracająca pozycję pocisku'''
+        return Statek('Pocisk', Statek.zwroc_pozycje(player)[0], Statek.zwroc_pozycje(player)[1])
+
+    def atak(self, other):
+        '''funkcja realizująca walkę pomiędzy statkami'''
+        def __del__(self):
+            '''funkcja informująca nas o usunięciu statku'''
+            print('Statek', "'", self.n, "'", 'zostal zniszczony')
+            pygame.draw.circle(plansza, (0,255,255), Statek.zwroc_pozycje(self), int(Statek.get_range(self)))
+
+        if self.z + other.z >= self.get_distance(other) and self.s > 0 and other.s > 0:
+            while self.s > 0 and other.s > 0:
+
+                if self.z < other.z:
+                    self.s -= other.s / 5
+                    if self.s > 0:
+                        other.s -= self.s / 5
+
+                else:
+                    other.s -= self.s / 5
+                    if other.s > 0:
+                        self.s -= other.s / 5
+
+            if self.s < 0:
+                __del__(self)
+                porazka()
+
+            else:
+                __del__(other)
+
 
 class Pieniadze:
-  def __init__(self,a,b,c=1):
-    '''funkcja tworząca monetę na ekranie'''
-    self.x=a
-    self.y=b
-    self.z=c
-  def zwroc_pozycje(self):
-    '''funkcja zwracająca pozycję monety'''
-    return (self.x, self.y)
-  def anihilacja(self):
-    '''funkcja 'niszcząca' zdobyte monety'''
-    self.z=0
-    pygame.draw.circle(plansza,(0,255,255),Pieniadze.zwroc_pozycje(monety[i]),3)
-  def istnienie(self):
-    '''funkcja sprawdzająca, czy dana moneta istnieje'''
-    return self.z==1
+
+    def __init__(self, a, b, c=1):
+        '''funkcja tworząca monetę na ekranie'''
+        self.x = a
+        self.y = b
+        self.z = c
+
+    def zwroc_pozycje(self):
+        '''funkcja zwracająca pozycję monety'''
+        return (self.x, self.y)
+
+    def anihilacja(self):
+      '''funkcja 'niszcząca' zdobyte monety'''
+      self.z = 0
+      pygame.draw.circle(plansza, (0,255,255), Pieniadze.zwroc_pozycje(monety[i]), 3)
+
+    def istnienie(self):
+      '''funkcja sprawdzająca, czy dana moneta istnieje'''
+      return self.z==1
+
 
 def zarobek(a, b):
-  '''funkcja sprawdzająca, czy nasz statek zdobył monetę'''
-  x = Statek.zwroc_pozycje(a)
-  y = Pieniadze.zwroc_pozycje(b)
-  if ((x[0]-y[0])**2+(x[1]-y[1])**2)**(1/2) <= 2+int(Statek.get_range(player)):
-    return True
+    '''funkcja sprawdzająca, czy nasz statek zdobył monetę'''
+    x = Statek.zwroc_pozycje(a)
+    y = Pieniadze.zwroc_pozycje(b)
+
+    if ((x[0] - y[0])**2 + (x[1] - y[1])**2) ** 0.5 <= 2 + int(Statek.get_range(player)):
+        return True
+
+
 def porazka():
-  '''funkcja wykonywana, gdy przegramy'''
-  print("PORAŻKA")
-  time.sleep(2)
-  sys.exit(0)
-def rysowanie_przeciwnik(n,kolor,kolor2):
+    '''funkcja wykonywana, gdy przegramy'''
+    print("PORAŻKA")
+    time.sleep(1)
+    sys.exit(0)
+
+
+def rysowanie_przeciwnik(n, kolor, kolor2):
   '''funkcja rysująca przeciwnika'''
-  pygame.draw.circle(plansza,(kolor,kolor2,kolor2),Statek.zwroc_pozycje(przeciwnicy[n]),wielkość[n])
-def rysowanie_lufy(m,n,o,mn,nm):
-  '''funkcja rysująca lub zamazywująca lufę statku'''
-  pygame.draw.rect(plansza,(0,255,255),(Statek.zwroc_pozycje(player)[0]+Statek.get_range(player)+m-1-o,Statek.zwroc_pozycje(player)[1]-4+n,mn,nm))
+  pygame.draw.circle(plansza, (kolor,kolor2,kolor2), Statek.zwroc_pozycje(przeciwnicy[n]), wielkość[n])
+
+
+def rysowanie_lufy(m, n, o, mn, nm):
+    '''funkcja rysująca lub zamazywująca lufę statku'''
+    pygame.draw.rect(plansza, (0,255,255), (Statek.zwroc_pozycje(player)[0] + Statek.get_range(player) + m - 1 - o, Statek.zwroc_pozycje(player)[1] - 4 + n, mn, nm))
+
+
 def rysowanie_pocisku(kolor):
-  '''funkcja rysująca lub zamazywująca pocisk'''
-  pygame.draw.circle(plansza,(0,kolor,kolor),Statek.zwroc_pozycje(pocisk[0]),4)
+    '''funkcja rysująca lub zamazywująca pocisk'''
+    pygame.draw.circle(plansza, (0,kolor,kolor), Statek.zwroc_pozycje(pocisk[0]), 4)
+
 
 w=[]
 for i in range(400):	# dodajemy losowo wygenerowane współrzędne monet do listy 'w'
