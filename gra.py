@@ -129,7 +129,7 @@ def zarobek(a, b):
 
 def porazka():
     '''funkcja wykonywana, gdy przegramy'''
-    print("PORAŻKA")
+    print('PORAŻKA')
     time.sleep(1)
     sys.exit(0)
 
@@ -149,50 +149,56 @@ def rysowanie_pocisku(kolor):
     pygame.draw.circle(plansza, (0,kolor,kolor), Statek.zwroc_pozycje(pocisk[0]), 4)
 
 
-w=[]
+w = []
 for i in range(400):	# dodajemy losowo wygenerowane współrzędne monet do listy 'w'
-  w.append(random.randint(2,798))
-monety = []
-for i in range(0,400,2):	# tworzymy monety zapisując je w liście monety
-  monety.append(Pieniadze(w[i],w[i+1]))
+    w.append(random.randint(2, 798))
 
-pygame.display.set_mode((800,800))	# tworzymy planszę do gry rozmiaru 800x800
-pygame.display.set_caption("Statki")	# nazywamy ją 'Statki'
+monety = []
+for i in range(0, 400, 2):	# tworzymy monety zapisując je w liście monety
+    monety.append(Pieniadze(w[i], w[i + 1]))
+
+pygame.display.set_mode((800, 800))	# tworzymy planszę do gry rozmiaru 800x800
+pygame.display.set_caption('Statki')	# nazywamy ją 'Statki'
 
 plansza = pygame.display.get_surface()	# umożliwiamy generowanie czegokolwiek na planszy
-plansza.fill((0,255,255))	# zapełniamy plansze kolorem imitującym morze
+plansza.fill((0, 255, 255))	# zapełniamy plansze kolorem imitującym morze
 
-player = Statek('Titanic',40,40)	# tworzymy postać gracza
-s=10		# siła gracza
-z=15		# zasięg(rozmiar) gracza
-l=10000		# regeneracja zdrowia gracza(im mniej tym lepiej)
-limit=5		# limit regeneracji zdrowia gracza
-zas=0.05	# zyskiwany zasieg gracza(im mniej tym lepiej
-kasa=0		# uzbierane pieniądze
-speed=1		# prędkość gracza
+player = Statek('Titanic', 40, 40)	# tworzymy postać gracza
+s = 10		# siła gracza
+z = 15		# zasięg(rozmiar) gracza
+l = 10000		# regeneracja zdrowia gracza(im mniej tym lepiej)
+limit = 5		# limit regeneracji zdrowia gracza
+zas = 0.05	# zyskiwany zasieg gracza(im mniej tym lepiej
+kasa = 0		# uzbierane pieniądze
+speed = 1		# prędkość gracza
 Statek.get_stats(player, s, z)	# nadajemy statystyki obiektowi gracza
 
-współrzędne=[]	#tu umieścimy współrzędne przeciwników
-wielkość=[]	# tu umieścimy zasięg(wielkość) przeciwników
-kolor=[]	# tu umieścimy siłę(reprezentowaną poprzez kolor) przeciwników
-przeciwnicy=[]	# tu umieścimy przeciwników
-for i in range (80):
-  współrzędne.append(random.randint(80,760))
-for i in range (40):
-  wielkość.append(random.randint(6,25))
-  kolor.append(random.randint(20,255))
-for i in range (0,80,2):	# tworzymy obiekty(przeciwników)
-  przeciwnicy.append(Statek('przeciwnik',współrzędne[i],współrzędne[i+1]))
-for i in range (40):	# nadajemy przeciwnikom siłe i zasięg
-  Statek.get_stats(przeciwnicy[i],kolor[i]/25.5,wielkość[i])
-mn,nm=10,8	# długosć oraz szerokość lufy
-px,py=0,0	# zmienne przechowujące prędkość pocisku w 2 kierunkach zależne od prędkości i kierunku statku
-m,n=0,0		# zmienne pomagające umiejscowić lufę względem statku
-a,b=0,0		# zmienne przechowujące prędkość statku w 2 kierunkach
-pocisk=[Statek.strzal(player)]	# tworzymy pierwszy pocisk i umieszczamy go w liście
-Statek.get_stats(pocisk[0],1,0)	# nadajemy 1 siły pociskowi
+współrzędne = []	#tu umieścimy współrzędne przeciwników
+wielkość = []	# tu umieścimy zasięg(wielkość) przeciwników
+kolor = []	# tu umieścimy siłę(reprezentowaną poprzez kolor) przeciwników
+przeciwnicy = []	# tu umieścimy przeciwników
 
-while 1:	# pętla reprezentująca 'tury' w grze, przerwie się jeżeli przegraliśmy, bądź wygraliśmy
+for i in range (80):
+    współrzędne.append(random.randint(80, 760))
+
+for i in range (40):
+    wielkość.append(random.randint(6, 25))
+    kolor.append(random.randint(20, 255))
+
+for i in range (0, 80, 2):	# tworzymy obiekty(przeciwników)
+    przeciwnicy.append(Statek('przeciwnik', współrzędne[i], współrzędne[i + 1]))
+
+for i in range (40):	# nadajemy przeciwnikom siłe i zasięg
+    Statek.get_stats(przeciwnicy[i], kolor[i] / 25.5, wielkość[i])
+
+mn, nm = 10, 8	# długosć oraz szerokość lufy
+px, py = 0, 0	# zmienne przechowujące prędkość pocisku w 2 kierunkach zależne od prędkości i kierunku statku
+m, n = 0, 0		# zmienne pomagające umiejscowić lufę względem statku
+a, b = 0, 0		# zmienne przechowujące prędkość statku w 2 kierunkach
+pocisk = [Statek.strzal(player)]	# tworzymy pierwszy pocisk i umieszczamy go w liście
+Statek.get_stats(pocisk[0], 1, 0)	# nadajemy 1 siły pociskowi
+
+while True:	# pętla reprezentująca 'tury' w grze, przerwie się jeżeli przegraliśmy, bądź wygraliśmy
   for j in range(40):	# duża pętla wykonująca się dla każdego przeciwnika
     for przycisk in pygame.event.get():		# sprawdzamy, czy nie został nasiśnięty jakiś przycisk
       if przycisk.type == QUIT:		# jeżeli kliknęliśmy exit(prawy górny róg ekranu), to bez żadnego błędu gra zostanie wyłączona
