@@ -40,10 +40,10 @@ class Statek:
         '''funkcja zwracająca odległość między dwoma statkami'''
         return abs(((self.x - other.x)**2 + (self.y - other.y)**2)) ** 0.5
 
-    def get_stats(self, siła, zasięg):
+    def get_stats(self, sila, zasieg):
         '''funkcja nadająca statystyki siły oraz zasięgu(rozmiaru) statkom'''
-        self.z = zasięg
-        self.s = siła
+        self.z = zasieg
+        self.s = sila
 
     def get_buff(self, s, z):
         '''funkcja zmieniająca statystyki statku'''
@@ -136,7 +136,7 @@ def porazka():
 
 def rysowanie_przeciwnik(n, kolor, kolor2):
   '''funkcja rysująca przeciwnika'''
-  pygame.draw.circle(plansza, (kolor,kolor2,kolor2), Statek.zwroc_pozycje(przeciwnicy[n]), wielkość[n])
+  pygame.draw.circle(plansza, (kolor,kolor2,kolor2), Statek.zwroc_pozycje(przeciwnicy[n]), wielkosc[n])
 
 
 def rysowanie_lufy(m, n, o, mn, nm):
@@ -173,23 +173,23 @@ kasa = 0		# uzbierane pieniądze
 speed = 1		# prędkość gracza
 Statek.get_stats(player, s, z)	# nadajemy statystyki obiektowi gracza
 
-współrzędne = []	#tu umieścimy współrzędne przeciwników
-wielkość = []	# tu umieścimy zasięg(wielkość) przeciwników
+wspolrzedne = []	#tu umieścimy współrzędne przeciwników
+wielkosc = []	# tu umieścimy zasięg(wielkość) przeciwników
 kolor = []	# tu umieścimy siłę(reprezentowaną poprzez kolor) przeciwników
 przeciwnicy = []	# tu umieścimy przeciwników
 
 for i in range (80):
-    współrzędne.append(random.randint(80, 760))
+    wspolrzedne.append(random.randint(80, 760))
 
 for i in range (40):
-    wielkość.append(random.randint(6, 25))
+    wielkosc.append(random.randint(6, 25))
     kolor.append(random.randint(20, 255))
 
 for i in range (0, 80, 2):	# tworzymy obiekty(przeciwników)
-    przeciwnicy.append(Statek('przeciwnik', współrzędne[i], współrzędne[i + 1]))
+    przeciwnicy.append(Statek('przeciwnik', wspolrzedne[i], wspolrzedne[i + 1]))
 
 for i in range (40):	# nadajemy przeciwnikom siłe i zasięg
-    Statek.get_stats(przeciwnicy[i], kolor[i] / 25.5, wielkość[i])
+    Statek.get_stats(przeciwnicy[i], kolor[i] / 25.5, wielkosc[i])
 
 mn, nm = 10, 8	# długosć oraz szerokość lufy
 px, py = 0, 0	# zmienne przechowujące prędkość pocisku w 2 kierunkach zależne od prędkości i kierunku statku
@@ -318,8 +318,8 @@ while True:	# pętla reprezentująca 'tury' w grze, przerwie się jeżeli przegr
         pygame.draw.circle(plansza,(0,255,255),Statek.zwroc_pozycje(player),int(Statek.get_range(player)))	# zamazywujemy poprzednią pozycję gracza
         Statek.pistolet(player,m,n,mn,nm)	# przesuwamy gracza
 
-        wyjście=Statek.zwroc_pozycje(player)	# zapisujemy współrzędne gracza, aby sprawdzić, czy nie wyszedł poza dozwolony obszar
-        if wyjście[0]-Statek.get_range(player)<0 or wyjście[0]+Statek.get_range(player)>800 or wyjście[1]-Statek.get_range(player)<0 or wyjście[1]+Statek.get_range(player)>800:
+        wyjscie=Statek.zwroc_pozycje(player)	# zapisujemy współrzędne gracza, aby sprawdzić, czy nie wyszedł poza dozwolony obszar
+        if wyjscie[0]-Statek.get_range(player)<0 or wyjscie[0]+Statek.get_range(player)>800 or wyjscie[1]-Statek.get_range(player)<0 or wyjscie[1]+Statek.get_range(player)>800:
             porazka()
 
         przeciwnik=[]	# zmienna, którą zapełniamy 'żywymi przeciwnikami'
@@ -347,9 +347,9 @@ while True:	# pętla reprezentująca 'tury' w grze, przerwie się jeżeli przegr
                 rysowanie_przeciwnik(j,0,255)		# zamazujemy przeciwnika aktywnego
                 g,h=random.randint(-2,2),random.randint(-2,2)
                 Statek.move(przeciwnicy[j],g,h)	# przesuwamy przeciwnika aktywnego
-                wyjście2=Statek.zwroc_pozycje(przeciwnicy[j])	# zapisujemy współrzędne przeciwnika, aby sprawdzić, czy nie wyszedł poza dozwolony obszar
+                wyjscie2=Statek.zwroc_pozycje(przeciwnicy[j])	# zapisujemy współrzędne przeciwnika, aby sprawdzić, czy nie wyszedł poza dozwolony obszar
 
-                if wyjście2[0]<0 or wyjście2[0]>800 or wyjście2[1]<0 or wyjście2[1]>800:	# jeżeli wyszedł:
+                if wyjscie2[0]<0 or wyjscie2[0]>800 or wyjscie2[1]<0 or wyjscie2[1]>800:	# jeżeli wyszedł:
                     Statek.move(przeciwnicy[j],-1*g,-1*h)	# cofnij go
 
                 rysowanie_przeciwnik(j,kolor[j],0)	# narysuj go ponownie
