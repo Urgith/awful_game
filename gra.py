@@ -206,41 +206,43 @@ while True:	# pętla reprezentująca 'tury' w grze, przerwie się jeżeli przegr
 
             if przycisk.type == KEYDOWN:	# jeżeli kliknęliśmy jakiś przycisk na klawiaturze, to sprawdzamy, który:
                 if przycisk.key == K_UP:	# strzałka w górę:
-                    rysowanie_lufy(m,n,0,11,11)	# rysujemy lufę na górze statku
+                    rysowanie_lufy(m, n, 0, 11, 11)	# rysujemy lufę na górze statku
 
-                    a,b=0,int(-1*speed)	# zmieniamy kierunek statku
-                    m = -1 * Statek.get_range(player) -2	# ten i 2 poniższe wiersze dotyczą ułożenia lufy po wystrzale, ostatni predkości pocisku 
-                    n = -1 * Statek.get_range(player) -2
-                    mn,nm=8,10
-                    pa,pb=0,-4*speed
+                    a, b = 0, int(-speed)	# zmieniamy kierunek statku
+                    m = -Statek.get_range(player) - 2	# ten i 2 poniższe wiersze dotyczą ułożenia lufy po wystrzale, ostatni predkości pocisku 
+                    n = -Statek.get_range(player) - 2
+                    mn, nm = 8, 10
+                    pa, pb = 0, -speed * 4
 
                 if przycisk.key == K_DOWN:	#podobnie
-                    rysowanie_lufy(m,n,0,11,11)
+                    rysowanie_lufy(m, n, 0, 11, 11)
 
-                    a,b=0,int(speed)
-                    m = -1 * Statek.get_range(player) -2
-                    n = Statek.get_range(player) -2
-                    mn,nm=8,10
-                    pa,pb=0,4*speed
+                    a, b = 0, int(speed)
+                    m = -Statek.get_range(player) - 2
+                    n = Statek.get_range(player) - 2
+                    mn, nm = 8, 10
+                    pa, pb = 0, 4 * speed
 
                 if przycisk.key == K_LEFT:	#podobnie
-                    rysowanie_lufy(m,n,0,11,11)
+                    rysowanie_lufy(m, n, 0, 11, 11)
 
-                    a,b=int(-1*speed),0
-                    m = -2 * Statek.get_range(player) -2
+                    a, b = int(-speed), 0
+                    m = (-Statek.get_range(player) * 2) - 2
                     n = 0
-                    mn,nm=10,8
-                    pa,pb=-5*speed,0
+                    mn, nm = 10, 8
+                    pa, pb = -speed * 5, 0
 
                 if przycisk.key == K_RIGHT:	#podobnie
-                    rysowanie_lufy(m,n,1,11,11)
+                    rysowanie_lufy(m, n, 1, 11, 11)
 
-                    a,b=int(speed),0
-                    m,n = 0,0
-                    mn,nm=10,8
-                    pa,pb=5*speed,0
+                    a, b = int(speed), 0
+                    m, n = 0, 0
+                    mn, nm = 10, 8
+                    pa, pb = 5 * speed, 0
 
-                if przycisk.key == K_SPACE: a,b=0,0	#zatrzymujemy statek
+                if przycisk.key == K_SPACE:
+                    a, b = 0, 0	#zatrzymujemy statek
+
                 if przycisk.key == K_h:	# help(sprawdzamy co robią dane przyciski)
                     print("Q - aby zwiększyć siłę")
                     print("W - aby zmniejszyć zasięg")
@@ -252,118 +254,120 @@ while True:	# pętla reprezentująca 'tury' w grze, przerwie się jeżeli przegr
                     print("P - aby zobaczyć ile masz pieniędzy")
 
                 if przycisk.key == K_p:
-                    print(round(kasa,3))
+                    print(round(kasa, 3))
 
                 if przycisk.key == K_o:
-                    print(round(Statek.get_strenght(player),3))
+                    print(round(Statek.get_strenght(player), 3))
 
-                if kasa >=1:	# polepszac statystyki możemy tylko jeżeli mamy conajmniej 1 monetę (możemy się zadłużyć):
+                if kasa >= 1:	# polepszac statystyki możemy tylko jeżeli mamy conajmniej 1 monetę (możemy się zadłużyć):
                     if przycisk.key == K_q:	# tracimy 10 monet, leczymy się, im mniej mamy życia, tym leczenie jest mocniejsze(ogólnie słabe)
                         kasa -= 10
-                        Statek.get_buff(player,(5/(Statek.get_strenght(player)+1))-5/11,0)
+                        Statek.get_buff(player, (5 / (Statek.get_strenght(player) + 1)) - (5 / 11), 0)
 
                     if przycisk.key == K_w:	# tracimy 15 monet oraz zmniejszamy swój zasięg, ponieważ zmieniliśmy zasięg musimy kilka rzeczy odrysować:
-                        if Statek.get_range(player)>=2:
-                            pygame.draw.circle(plansza,(0,255,255),Statek.zwroc_pozycje(player),int(Statek.get_range(player)))	# rysujemy morze na miejsce statku
-                            rysowanie_lufy(m,n,-1,mn,nm)	# rysujemy morze na miejsce lufy
-                            Statek.get_buff(player,0,-1/3*(Statek.get_range(player)))
-                            rysowanie_lufy(m,n,-1,mn,nm)	# rysujemy nową lufę
+                        if Statek.get_range(player) >= 2:
+                            pygame.draw.circle(plansza, (0, 255, 255), Statek.zwroc_pozycje(player), int(Statek.get_range(player)))	# rysujemy morze na miejsce statku
+                            rysowanie_lufy(m, n, -1, mn, nm)	# rysujemy morze na miejsce lufy
+                            Statek.get_buff(player, 0, -Statek.get_range(player) / 3)
+                            rysowanie_lufy(m, n, -1, mn, nm)	# rysujemy nową lufę
                             kasa -= 15
 
                     if przycisk.key == K_e:	# tracimy 6 monet, skuteczniej się leczymy
-                        if limit<=9:
+                        if limit <= 9:
                             kasa -= 6
-                            limit+=0.5
-                            l*=0.75
+                            limit += 0.5
+                            l *= 0.75
 
                     if przycisk.key == K_r:	# tracimy 8 monet, wolniej zyskujemy zasięg
                         kasa -= 8
-                        zas*=(2/3)
+                        zas *= (2 / 3)
 
                     if przycisk.key == K_t:	# im jesteśmy szybsi tym dodatkowa prędkość jest droższa
-                        kasa -= 5*speed
+                        kasa -= (5 * speed)
                         speed += 1
 
                     if przycisk.key == K_y and speed >= 2:	# im jesteśmy szybsi tym zmniejszenie prędkości jest droższe
-                        kasa -= 10*speed
+                        kasa -= (10 * speed)
                         speed -= 1
 
                     if przycisk.key == K_a:	# strzelamy pociskiem w cenie 1.5 monety za sztukę:
                         rysowanie_pocisku(255)	# zamazywujemy pozycję wcześniejszego pocisku, ponieważ zastępujemy go nowym
                         kasa -= 1.5
-                        pocisk=[Statek.strzal(player)]	# tworzymy nowy pocisk
-                        Statek.get_stats(pocisk[0],1,0)	# nadajemy statystyki pociskowi, aby było go nam łatwiej usunąć
-                        px,py=pa,pb	# nadajemy prędkość i kierunek pociskowi
+                        pocisk = [Statek.strzal(player)]	# tworzymy nowy pocisk
+                        Statek.get_stats(pocisk[0], 1, 0)	# nadajemy statystyki pociskowi, aby było go nam łatwiej usunąć
+                        px, py = pa, pb	# nadajemy prędkość i kierunek pociskowi
 
         rysowanie_pocisku(255)	# zamazywujemy wcześniejszą pozycję pocisku
-        Statek.move(pocisk[0],px,py)	# przesuwamy pocisk
+        Statek.move(pocisk[0], px, py)	# przesuwamy pocisk
         rysowanie_pocisku(0)	# rysujemy nową pozycję pocisku
 
-        if Statek.zwroc_pozycje(pocisk[0])[0]==40 and Statek.zwroc_pozycje(pocisk[0])[1]==40:	# zamazywanie pociku, który powstaje na samym starcie
+        if Statek.zwroc_pozycje(pocisk[0])[0] == 40 and Statek.zwroc_pozycje(pocisk[0])[1] == 40:	# zamazywanie pociku, który powstaje na samym starcie
             rysowanie_pocisku(255)
 
         for i in range (40):	# sprawdzanie, czy któryś z przeciwników nie dostał pociskiem o ile pocisk nie trafił jeszcze innego celu
-            if Statek.get_distance(pocisk[0],przeciwnicy[i]) <= 4+Statek.get_range(przeciwnicy[i]) and Statek.get_strenght(pocisk[0])!=0 and Statek.get_strenght(przeciwnicy[i])>2:
-                Statek.get_buff(przeciwnicy[i],-1,0)	# osłabiamy przeciwnika(-1 siły)
+            if (Statek.get_distance(pocisk[0], przeciwnicy[i]) <= 4 + Statek.get_range(przeciwnicy[i])) and (Statek.get_strenght(pocisk[0]) != 0) and (Statek.get_strenght(przeciwnicy[i]) > 2):
+                Statek.get_buff(przeciwnicy[i], -1, 0)	# osłabiamy przeciwnika(-1 siły)
                 kolor[i] -= 25.5	# zmieniamy kolor przeciwnika
                 rysowanie_pocisku(255)	# zamazywujemy pocisk
-                Statek.move(pocisk[0],1000000,1000000)	# wysyłamy pocisk tak daleko jak to tylko możliwe (wystrzelenie kolejnego pocisku nadpisze poprzedni)
+                Statek.move(pocisk[0], 1000000, 1000000)	# wysyłamy pocisk tak daleko jak to tylko możliwe (wystrzelenie kolejnego pocisku nadpisze poprzedni)
 
-        zdrowie = pygame.Surface((800,20))	# tworzymy pasek zdrowia
-        d=int(255*(s-Statek.get_strenght(player))/s)
-        e=int(Statek.get_strenght(player)*255/s)
+        zdrowie = pygame.Surface((800, 20))	# tworzymy pasek zdrowia
+        d = int(255 * (s - Statek.get_strenght(player)) / s)
+        e = int(255 * Statek.get_strenght(player) / s)
 
-        zdrowie.fill((d,e,0))	# wypełniamy pasek zdrowia odpowiednim kolorem (zielony-dobrze, czerowny-źle)
-        plansza.blit(zdrowie,(0,0))	# aplikujemy pasek zdrowia na planszy
-        pygame.draw.circle(plansza,(0,255,255),Statek.zwroc_pozycje(player),int(Statek.get_range(player)))	# zamazywujemy poprzednią pozycję gracza
-        Statek.pistolet(player,m,n,mn,nm)	# przesuwamy gracza
+        zdrowie.fill((d, e, 0))	# wypełniamy pasek zdrowia odpowiednim kolorem (zielony-dobrze, czerowny-źle)
+        plansza.blit(zdrowie, (0, 0))	# aplikujemy pasek zdrowia na planszy
+        pygame.draw.circle(plansza, (0, 255, 255), Statek.zwroc_pozycje(player), int(Statek.get_range(player)))	# zamazywujemy poprzednią pozycję gracza
+        Statek.pistolet(player, m, n, mn, nm)	# przesuwamy gracza
 
-        wyjscie=Statek.zwroc_pozycje(player)	# zapisujemy współrzędne gracza, aby sprawdzić, czy nie wyszedł poza dozwolony obszar
-        if wyjscie[0]-Statek.get_range(player)<0 or wyjscie[0]+Statek.get_range(player)>800 or wyjscie[1]-Statek.get_range(player)<0 or wyjscie[1]+Statek.get_range(player)>800:
+        wyjscie = Statek.zwroc_pozycje(player)	# zapisujemy współrzędne gracza, aby sprawdzić, czy nie wyszedł poza dozwolony obszar
+        if wyjscie[0] - Statek.get_range(player) < 0 or wyjscie[0] + Statek.get_range(player) > 800 or wyjscie[1] - Statek.get_range(player) < 0 or wyjscie[1] + Statek.get_range(player) > 800:
             porazka()
 
-        przeciwnik=[]	# zmienna, którą zapełniamy 'żywymi przeciwnikami'
-        reset=[]	# zmienna, która zapełniamy niezdobytymi monetami
+        przeciwnik = []	# zmienna, którą zapełniamy 'żywymi przeciwnikami'
+        reset = []	# zmienna, która zapełniamy niezdobytymi monetami
         for i in range (200):
             if Pieniadze.istnienie(monety[i]):	# jeżeli jeszcze nie zdobyliśmy monety:
-                pygame.draw.circle(plansza,(255,255,0),Pieniadze.zwroc_pozycje(monety[i]),3)
+                pygame.draw.circle(plansza, (255, 255, 0), Pieniadze.zwroc_pozycje(monety[i]), 3)
                 reset.append(1)
 
-                if zarobek(player,monety[i]):	# zwiększamy kasę o 1 i nie bierzemy pod uwagę kolejnej monety o ile na nią wpłyneliśmy 
+                if zarobek(player, monety[i]):	# zwiększamy kasę o 1 i nie bierzemy pod uwagę kolejnej monety o ile na nią wpłyneliśmy 
                     Pieniadze.anihilacja(monety[i])
-                    kasa+=1
+                    kasa += 1
 
-        pygame.draw.circle(plansza,(0,0,255),Statek.zwroc_pozycje(player),int(Statek.get_range(player))) # rysujemy gracza
+        pygame.draw.circle(plansza, (0, 0, 255), Statek.zwroc_pozycje(player), int(Statek.get_range(player))) # rysujemy gracza
 
         for i in range(40):	# sprawdzamy, czy nie walczymy z którymś z przeciwników
             Statek.atak(player, przeciwnicy[i])	# realizujemy walkę
-            if Statek.get_strenght(przeciwnicy[i])>0:	# jeżeli przeciwnik dalej 'żyje':
+            if Statek.get_strenght(przeciwnicy[i]) > 0:	# jeżeli przeciwnik dalej 'żyje':
                 przeciwnik.append(1)	# dodajemy do 'przeciwnik' jedynkę
 
         for i in range (40):	# rysujemy wszystkimch przeciwników i 1 z nich przesówamy:
-            if Statek.get_strenght(przeciwnicy[i])>0 and Statek.get_strenght(przeciwnicy[j])>0:
-                if i <= 39: rysowanie_przeciwnik(i,kolor[i],0)	# rysujemy przeciwnika statycznego
+            if Statek.get_strenght(przeciwnicy[i]) > 0 and Statek.get_strenght(przeciwnicy[j]) > 0:
+                if i <= 39:
+                    rysowanie_przeciwnik(i, kolor[i], 0)	# rysujemy przeciwnika statycznego
 
-                rysowanie_przeciwnik(j,0,255)		# zamazujemy przeciwnika aktywnego
-                g,h=random.randint(-2,2),random.randint(-2,2)
-                Statek.move(przeciwnicy[j],g,h)	# przesuwamy przeciwnika aktywnego
-                wyjscie2=Statek.zwroc_pozycje(przeciwnicy[j])	# zapisujemy współrzędne przeciwnika, aby sprawdzić, czy nie wyszedł poza dozwolony obszar
+                rysowanie_przeciwnik(j, 0, 255)		# zamazujemy przeciwnika aktywnego
+                g, h = random.randint(-2, 2), random.randint(-2, 2)
+                Statek.move(przeciwnicy[j], g, h)	# przesuwamy przeciwnika aktywnego
+                wyjscie2 = Statek.zwroc_pozycje(przeciwnicy[j])	# zapisujemy współrzędne przeciwnika, aby sprawdzić, czy nie wyszedł poza dozwolony obszar
 
-                if wyjscie2[0]<0 or wyjscie2[0]>800 or wyjscie2[1]<0 or wyjscie2[1]>800:	# jeżeli wyszedł:
-                    Statek.move(przeciwnicy[j],-1*g,-1*h)	# cofnij go
+                if wyjscie2[0] < 0 or wyjscie2[0] > 800 or wyjscie2[1] < 0 or wyjscie2[1] > 800:	# jeżeli wyszedł:
+                    Statek.move(przeciwnicy[j] , -g, -h)	# cofnij go
 
-                rysowanie_przeciwnik(j,kolor[j],0)	# narysuj go ponownie
+                rysowanie_przeciwnik(j, kolor[j], 0)	# narysuj go ponownie
                 pygame.display.flip()	# updatowanie całego obrazu(gry)
 
-        if 2 <= Statek.get_strenght(player) <= limit-2.5:				# jeżeli jesteśmy bardzo osłabieni to leczymy się oraz lekko zwiększa się nasz zasięg
-            Statek.get_buff(player, Statek.get_strenght(player)/l, zas/2)
+        if 2 <= Statek.get_strenght(player) <= limit - 2.5:				# jeżeli jesteśmy bardzo osłabieni to leczymy się oraz lekko zwiększa się nasz zasięg
+            Statek.get_buff(player, Statek.get_strenght(player) / l, zas / 2)
 
-        elif limit-2.5 <= Statek.get_strenght(player) <= limit:			# jeżeli jesteśmy lekko osłabieni to leczymy się oraz szybko zwiększa się nasz zasięg
-            Statek.get_buff(player, Statek.get_strenght(player)/l, zas)
+        elif limit - 2.5 <= Statek.get_strenght(player) <= limit:			# jeżeli jesteśmy lekko osłabieni to leczymy się oraz szybko zwiększa się nasz zasięg
+            Statek.get_buff(player, Statek.get_strenght(player) / l, zas)
 
-        else: Statek.get_buff(player, 0, zas)							# jeżeli jesteśmy pełni sił szybko zwieksza sie nasz zasięg
+        else:
+            Statek.get_buff(player, 0, zas)							# jeżeli jesteśmy pełni sił szybko zwieksza sie nasz zasięg
 
-        kasa+=(1-kasa/50)/100
+        kasa += ((1 - (kasa / 50)) / 100)
 
         if not 1 in reset or not 1 in przeciwnik:	# jeżeli zostały zdobyte wszystkie monety lub wszyscy wrogowie zostali pokonani-wygraliśmy
             print("ZWYCIĘSTWO")
